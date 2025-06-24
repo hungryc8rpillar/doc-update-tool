@@ -1,1 +1,26 @@
 .vercel
+node_modules/
+.next/
+.venv/
+*.log
+
+# Documentation parsing
+data/
+data/documentation/
+*.md
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Python cache (if not already there)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+test*
+debug*

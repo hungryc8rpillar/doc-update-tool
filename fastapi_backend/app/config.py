@@ -38,6 +38,13 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: Set[str]
 
+    # Documentation AI Settings - NEW LINES
+    OPENAI_API_KEY: str = ""
+    DOC_PROCESSING_MAX_SECTIONS: int = 50
+    AI_MODEL: str = "gpt-4o-mini"
+    AI_MAX_TOKENS: int = 2000
+    AI_TEMPERATURE: float = 0.3
+
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )

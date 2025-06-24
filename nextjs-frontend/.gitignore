@@ -37,3 +37,9 @@ yarn-error.log*
 next-env.d.ts
 
 !/lib/
+
+#my additions
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
