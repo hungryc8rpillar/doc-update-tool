@@ -133,3 +133,84 @@ npm run dev  # or pnpm dev
 -   **User Authentication**: Add a user login system to track who made which changes.
 -   **CI/CD Pipeline**: Implement a continuous integration and deployment pipeline to automate testing and deployment to a cloud environment.
 -   **Support for More Formats**: Allow direct updates to Markdown (`.md`) files instead of just scraped JSON representations.
+
+---
+
+## Tradeoffs and Fast Implementation Decisions
+
+### 🗄️ Data Storage & Persistence
+- **What we did:** Used JSON file storage in `data/updates/` for all data.
+- **Why:** Allowed rapid development without database setup, migrations, or ORM configuration.
+- **Production approach:** Use PostgreSQL/MongoDB with proper schemas, foreign keys, connection pooling, transaction management, and backup procedures.
+
+### 🔐 Authentication & User Management
+- **What we did:** No authentication system; anonymous usage.
+- **Why:** Authentication adds complexity without demonstrating core AI functionality.
+- **Production approach:** JWT auth, role-based access, user sessions, audit trails, and API key management.
+
+### 🧠 AI Implementation Strategy
+- **What we did:** Direct OpenAI API calls with simple prompting.
+- **Why:** Simple prompting gets 80% of the functionality with 20% of the complexity.
+- **Production approach:** RAG with vector embeddings, chunking, vector database (Pinecone/Weaviate), and multiple model support.
+
+### 🔍 Document Processing
+- **What we did:** Basic JSON parsing with simple text extraction.
+- **Why:** Sufficient for demo and workflow demonstration.
+- **Production approach:** Advanced markdown parsing, code block detection, cross-reference detection, and support for multiple formats.
+
+### 🔄 State Management (Frontend)
+- **What we did:** In-memory state with React hooks (`useState`, `useEffect`).
+- **Why:** Adequate for demo scope.
+- **Production approach:** Redux Toolkit or Zustand, server-side sessions, optimistic updates, offline support.
+
+### 🚨 Error Handling & Monitoring
+- **What we did:** Basic try/catch, console logging, simple error boundaries.
+- **Why:** To focus on core features and keep code short.
+- **Production approach:** Structured logging, APM, error tracking (Sentry/Rollbar), health checks, circuit breakers.
+
+### 🏗️ API Design & Validation
+- **What we did:** Simple Pydantic models with basic validation.
+- **Why:** Focused on functionality over API robustness.
+- **Production approach:** Comprehensive validation, API versioning, rate limiting, request/response caching, and detailed OpenAPI docs.
+
+### 🧪 Testing Strategy
+- **What we did:** Manual testing only.
+- **Why:** Test-driven development would have slowed feature development for a demo.
+- **Production approach:** Unit, integration, E2E, and performance tests.
+
+### 🔒 Security Considerations
+- **What we did:** Basic CORS, no advanced security.
+- **Why:** Security hardening wasn't necessary for a controlled demo.
+- **Production approach:** Input sanitization, API key management, request signing, CSP, and regular audits.
+
+### 📊 Performance & Scalability
+- **What we did:** Single FastAPI instance, synchronous processing, blocking AI calls.
+- **Why:** Performance optimization would require infrastructure setup and load testing.
+- **Production approach:** Async/await, background jobs, horizontal scaling, CDN, and query optimization.
+
+### 📝 Documentation & Code Comments
+- **What we did:** Minimal inline documentation and comments.
+- **Why:** To move quickly and keep files short.
+- **Production approach:** Add docstrings, inline comments, and more detailed documentation.
+
+---
+
+### Current Limitations
+
+- Single-user system; no concurrent user support.
+- File-based storage; not suitable for high-volume usage.
+- Simple AI prompting; no advanced RAG techniques.
+- Limited error recovery; basic retry mechanisms only.
+- No user authentication; all changes are anonymous.
+- Synchronous processing; AI calls block the UI.
+
+---
+
+### Planned Improvements
+
+- Multi-user support with proper authentication.
+- Database migration for scalability and reliability.
+- Advanced AI with vector embeddings and semantic search.
+- Background processing for large documentation sets.
+- Comprehensive testing suite.
+- Production deployment configuration.
