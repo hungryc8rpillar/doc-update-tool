@@ -105,11 +105,14 @@ cd doc-update-tool
 ```
 
 ### 2. Set up environment variables
-
-- Copy the example environment file and fill in your OpenAI API key:
+Copy the example environment file and fill in your OpenAI API key:
   ```bash
   cp .env.example .env
   ```
+
+**Note:**
+The application expects a folder called `documentation` inside the `data` directory (i.e., `data/documentation/`).
+You must provide your own documentation files in this folder for the tool to analyze and update. These files are not included in the repository.
 
 ### 3. Install and run the **backend** (FastAPI)
 
