@@ -1,6 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from typing import List
-from app.schemas_documentation import DocumentSection, ChangeQuery, UpdateSuggestion
+from app.schemas_documentation import DocumentSection, ChangeQuery, UpdateSuggestion, ApproveRequest, RejectRequest
 from app.services.doc_parser import DocumentationParser
 from app.services.ai_analyzer import ai_analyzer
 from app.services.enhanced_search import enhanced_search
@@ -143,22 +143,16 @@ async def analyze_and_save_changes(query: ChangeQuery):
     if not sections_loaded:
         doc_parser.parse_markdown_files()
         sections_loaded = True
-    
     # Get relevant sections and AI suggestions
     all_sections = doc_parser.get_sections()
-    relevant_sections = enhanced_search.semantic_search(query.query, all_sections, max_results=5)
-    
+    relevant_sections = enhanced_search.semantic_search(query.query, all_sections, max_results=20)
     if not relevant_sections:
-        return {"error": "No relevant sections found", "query": query.query}
-    
+        return {"error": "No relevant sections found", "query": query.query, "status": "error"}
     suggestions = await ai_analyzer.analyze_change_request(query, relevant_sections)
-    
     if not suggestions:
-        return {"error": "No suggestions generated", "query": query.query}
-    
+        return {"error": "No suggestions generated", "query": query.query, "status": "error"}
     # Save suggestions as pending updates
     batch_id = update_manager.save_pending_updates(suggestions, query.query)
-    
     return {
         "batch_id": batch_id,
         "query": query.query,
@@ -177,15 +171,19 @@ async def get_pending_updates(batch_id: str = None):
     }
 
 @router.post("/approve-suggestions")
-async def approve_suggestions(batch_id: str, approved_ids: List[str]):
+async def approve_suggestions(batch_id: str = Query(...), request: ApproveRequest = None):
     """Approve specific suggestions"""
-    result = update_manager.approve_suggestions(batch_id, approved_ids)
+    if request is None:
+        request = ApproveRequest(approved_ids=[])
+    result = update_manager.approve_suggestions(batch_id, request.approved_ids)
     return result
 
 @router.post("/reject-suggestions") 
-async def reject_suggestions(batch_id: str, rejected_ids: List[str]):
+async def reject_suggestions(batch_id: str = Query(...), request: RejectRequest = None):
     """Reject specific suggestions"""
-    result = update_manager.reject_suggestions(batch_id, rejected_ids)
+    if request is None:
+        request = RejectRequest(rejected_ids=[])
+    result = update_manager.reject_suggestions(batch_id, request.rejected_ids)
     return result
 
 @router.get("/applied-updates")
@@ -201,3 +199,9 @@ async def get_applied_updates():
 async def get_update_statistics():
     """Get statistics about documentation updates"""
     return update_manager.get_update_statistics()
+
+@router.post("/revert-all-updates")
+async def revert_all_updates():
+    """Revert all successfully applied updates."""
+    result = update_manager.revert_all_updates()
+    return result

@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Set, List
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -41,7 +41,8 @@ class Settings(BaseSettings):
     # Documentation AI Settings - NEW LINES
     OPENAI_API_KEY: str = ""
     DOC_PROCESSING_MAX_SECTIONS: int = 50
-    AI_MODEL: str = "gpt-4o-mini"
+    AI_MODELS: List[str] = ["gpt-4o-mini", "gpt-4o"]
+    AI_DEFAULT_MODEL: str = "gpt-4o-mini"
     AI_MAX_TOKENS: int = 2000
     AI_TEMPERATURE: float = 0.3
 
