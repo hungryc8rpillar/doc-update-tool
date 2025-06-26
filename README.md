@@ -67,6 +67,27 @@ graph TD
     d.  Saves these suggestions to **JSON files** for review.
 4.  The user reviews, approves, or rejects suggestions, and approved changes are written back to the documentation files.
 
+---
+
+## AI Workflow Overview
+
+When a user submits a query describing a documentation change, the following workflow is triggered:
+
+1. **Semantic Search:**
+   - The backend uses OpenAI's embedding model to convert the user's query into a vector.
+   - This vector is compared to pre-computed embeddings of documentation sections to find the most relevant content, even if the wording is different.
+2. **AI Suggestion Generation:**
+   - The relevant documentation sections and the user's query are sent to OpenAI's GPT-4o-mini model.
+   - The model generates precise update suggestions, showing both the original and proposed new text.
+3. **Review & Approval:**
+   - Suggestions are presented in the frontend for user review.
+   - Users can approve or reject each suggestion.
+4. **Automated Update:**
+   - Approved suggestions are automatically applied to the source documentation files.
+
+**Why GPT-4o-mini?**
+- We use GPT-4o-mini because it offers a strong balance between quality and speed. It is capable of producing high-quality suggestions for documentation updates while maintaining low latency, making the user experience smooth and responsive.
+
 ## Getting Started
 
 ### Prerequisites
@@ -128,11 +149,16 @@ npm run dev  # or pnpm dev
 
 ## Future Improvements
 
--   **Database Integration**: Replace the JSON file storage with a proper database (e.g., PostgreSQL) for better scalability and management of updates.
--   **Embedding Caching**: Cache documentation embeddings to reduce latency and API costs on subsequent queries.
--   **User Authentication**: Add a user login system to track who made which changes.
--   **CI/CD Pipeline**: Implement a continuous integration and deployment pipeline to automate testing and deployment to a cloud environment.
--   **Support for More Formats**: Allow direct updates to Markdown (`.md`) files instead of just scraped JSON representations.
+-   **Multi-user support with authentication:** Add user registration, login, and role-based permissions.
+-   **Database integration:** Migrate from file-based storage to a scalable database (e.g., PostgreSQL) for reliability and performance.
+-   **Advanced AI features:** Integrate vector databases and more sophisticated retrieval-augmented generation (RAG) for better semantic search and context.
+-   **Background processing:** Support large documentation sets and long-running tasks with background jobs.
+-   **Comprehensive testing:** Implement unit, integration, and end-to-end tests for both backend and frontend.
+-   **Production deployment:** Add scripts and configuration for robust, secure, and scalable deployment.
+-   **Embedding caching:** Cache documentation embeddings to reduce latency and API costs on subsequent queries.
+-   **Support for more documentation formats:** Enable updates to Markdown and other formats, not just JSON.
+-   **User attribution and audit trails:** Track who made which changes for accountability.
+-   **CI/CD pipeline:** Automate testing and deployment to cloud environments.
 
 ---
 
