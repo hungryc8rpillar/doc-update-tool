@@ -29,7 +29,7 @@ This project solves that problem. It allows a user to describe a change in plain
 
 ## Architecture Overview
 
-The application consists of a Next.js frontend and a FastAPI backend, orchestrated with Docker Compose.
+The application consists of a Next.js frontend and a FastAPI backend.
 
 ```mermaid
 graph TD
@@ -72,36 +72,49 @@ graph TD
 ### Prerequisites
 
 -   Git
--   Docker and Docker Compose
+-   Python 3.10+
+-   Node.js (v18+) & npm or pnpm
 -   An OpenAI API Key
 
-### Installation & Setup
+### 1. Clone the repository
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <your-repo-url>
-    cd <your-repo-directory>
-    ```
+```bash
+git clone <your-repo-url>
+cd <your-repo-directory>
+```
 
-2.  **Create an environment file:**
-    -   Copy the example environment file:
-        ```bash
-        cp .env.example .env
-        ```
-    -   Open the new `.env` file and add your OpenAI API key:
-        ```
-        OPENAI_API_KEY="sk-..."
-        ```
+### 2. Set up environment variables
 
-3.  **Launch the application with Docker Compose:**
-    ```bash
-    docker-compose up --build
-    ```
-    This command will build the Docker images for the frontend and backend and start both services.
+- Copy the example environment file and fill in your OpenAI API key and other required values:
+  ```bash
+  cp .env.example .env
+  ```
+- Edit `.env` and add your secrets.
 
-4.  **Access the application:**
-    -   Frontend (Web App): [http://localhost:3000](http://localhost:3000)
-    -   Backend (API Docs): [http://localhost:8000/docs](http://localhost:8000/docs)
+### 3. Install and run the **backend** (FastAPI)
+
+```bash
+cd fastapi_backend
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000 --reload
+```
+- The backend will be available at [http://localhost:8000/docs](http://localhost:8000/docs).
+
+### 4. Install and run the **frontend** (Next.js)
+
+```bash
+cd ../nextjs-frontend
+npm install  # or pnpm install
+npm run dev  # or pnpm dev
+```
+- The frontend will be available at [http://localhost:3000](http://localhost:3000).
+
+### 5. Access the application
+
+- **Frontend (Web App):** [http://localhost:3000](http://localhost:3000)
+- **Backend (API Docs):** [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## Usage
 
