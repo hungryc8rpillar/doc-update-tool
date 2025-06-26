@@ -11,6 +11,8 @@ export interface DocumentSection {
 
 export interface UpdateSuggestion {
   section_id: string;
+  section_title: string;
+  file_path: string;
   original_content: string;
   suggested_content: string;
   change_type: string;
@@ -68,13 +70,13 @@ export const api = {
   async approveSuggestions(batchId: string, approvedIds: string[]) {
     console.log('Sending approve request:', { batchId, approvedIds });
     
-    // batch_id as query parameter, approved_ids as array in request body
+    // batch_id as query parameter, approved_ids as object in request body
     const url = `${API_BASE}/api/documentation/approve-suggestions?batch_id=${encodeURIComponent(batchId)}`;
     
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(approvedIds), // Send as array, not object
+      body: JSON.stringify({ approved_ids: approvedIds }), // Send as object with approved_ids key
     });
     
     if (!response.ok) {
@@ -90,13 +92,13 @@ export const api = {
   async rejectSuggestions(batchId: string, rejectedIds: string[]) {
     console.log('Sending reject request:', { batchId, rejectedIds });
     
-    // batch_id as query parameter, rejected_ids as array in request body
+    // batch_id as query parameter, rejected_ids as object in request body
     const url = `${API_BASE}/api/documentation/reject-suggestions?batch_id=${encodeURIComponent(batchId)}`;
     
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(rejectedIds), // Send as array, not object
+      body: JSON.stringify({ rejected_ids: rejectedIds }), // Send as object with rejected_ids key
     });
     
     if (!response.ok) {
@@ -113,6 +115,25 @@ export const api = {
     const response = await fetch(`${API_BASE}/api/documentation/update-statistics`);
     if (!response.ok) {
       throw new Error(`Failed to get statistics: ${response.status}`);
+    }
+    return response.json();
+  },
+
+  async revertAllUpdates() {
+    const response = await fetch(`${API_BASE}/api/documentation/revert-all-updates`, {
+      method: 'POST'
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to revert updates: ${response.status} - ${errorText}`);
+    }
+    return response.json();
+  },
+
+  async getAppliedUpdates() {
+    const response = await fetch(`${API_BASE}/api/documentation/applied-updates`);
+    if (!response.ok) {
+      throw new Error(`Failed to get applied updates: ${response.status}`);
     }
     return response.json();
   }

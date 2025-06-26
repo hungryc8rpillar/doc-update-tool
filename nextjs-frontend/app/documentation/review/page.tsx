@@ -17,6 +17,8 @@ interface PendingBatch {
 interface PendingSuggestion {
   suggestion_id: string;
   section_id: string;
+  section_title: string;
+  file_path: string;
   original_content: string;
   suggested_content: string;
   change_type: string;
@@ -167,6 +169,28 @@ export default function ReviewPage() {
     }
   };
 
+  const handleRevertAll = async () => {
+    if (!confirm('Are you sure you want to revert all applied changes? This action cannot be undone.')) {
+      return;
+    }
+
+    setProcessing('reverting');
+    try {
+      const result = await api.revertAllUpdates();
+      alert(
+        `Revert process finished.\n\n` +
+        `Reverted and Removed: ${result.reverted_and_removed_count}\n` +
+        `Failed to Revert: ${result.failed_to_revert_count}`
+      );
+      await loadData(); // Reload data to reflect changes
+    } catch (error) {
+      console.error('Failed to revert updates:', error);
+      alert('An error occurred while reverting updates. Please check the console for details.');
+    } finally {
+      setProcessing(null);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
   };
@@ -211,6 +235,21 @@ export default function ReviewPage() {
                     </p>
                   </div>
                 </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Link
+                  href="/documentation/history"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50"
+                >
+                  History
+                </Link>
+                <button
+                  onClick={handleRevertAll}
+                  disabled={processing !== null}
+                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 disabled:bg-red-300"
+                >
+                  {processing === 'reverting' ? 'Reverting...' : 'Revert All Updates'}
+                </button>
               </div>
             </div>
           </div>
@@ -389,6 +428,22 @@ export default function ReviewPage() {
                                     : 'bg-red-100 text-red-800'
                                 }`}>
                                   {Math.round(suggestion.confidence_score * 100)}% confidence
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* File Information */}
+                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                              <div className="flex items-center space-x-4 text-sm">
+                                <div>
+                                  <span className="font-medium text-gray-700">Section:</span>
+                                  <span className="ml-1 text-gray-900">{suggestion.section_title}</span>
+                                </div>
+                                <div>
+                                  <span className="font-medium text-gray-700">File:</span>
+                                  <span className="ml-1 text-gray-900 font-mono text-xs">
+                                    {suggestion.file_path.split('/').pop() || suggestion.file_path}
+                                  </span>
                                 </div>
                               </div>
                             </div>

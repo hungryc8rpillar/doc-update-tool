@@ -1,70 +1,122 @@
-## Next.js FastAPI Template
+# AI-Powered Documentation Update Tool
 
-<a href="https://www.vintasoftware.com/blog/next-js-fastapi-template"><img src="images/banner.png" alt="Next.js FastAPI Template" width="auto"></a>
-<p align="center">
-    <em>Next.js FastAPI Template: Python + Modern TypeScript stack with Zod validation.</em>
-</p>
-<p align="center">
-<a href="https://github.com/vintasoftware/nextjs-fastapi-template/actions/workflows/ci.yml" target="_blank">
-    <img src="https://github.com/vintasoftware/nextjs-fastapi-template/actions/workflows/ci.yml/badge.svg" alt="CI">
-</a>
-<a href="https://coveralls.io/github/vintasoftware/nextjs-fastapi-template" target="_blank">
-    <img src="https://coveralls.io/repos/github/vintasoftware/nextjs-fastapi-template/badge.svg" alt="Coverage">
-</a>
-</p>
+An intelligent tool that uses natural language to find and update technical documentation, ensuring your content stays accurate and up-to-date with minimal effort.
 
 ---
 
-**Documentation**: <a href="https://vintasoftware.github.io/nextjs-fastapi-template/" target="_blank">https://vintasoftware.github.io/nextjs-fastapi-template/</a>
+## The Problem
 
-**Source Code**: <a href="https://github.com/vintasoftware/nextjs-fastapi-template/" target="_blank">https://github.com/vintasoftware/nextjs-fastapi-template/</a>
+Information changes fast. For any software product, keeping documentation in sync with new features, deprecations, and best practices is a constant challenge. Manually finding every place that needs an update is tedious, error-prone, and time-consuming.
 
----
+This project solves that problem. It allows a user to describe a change in plain English, and the AI will find all relevant sections in the documentation and suggest precise updates.
 
-The Next.js FastAPI Template provides a solid foundation for scalable, high-performance web applications, following clean architecture and best practices. It simplifies development by integrating FastAPI, Pydantic, and Next.js with TypeScript and Zod, ensuring end-to-end type safety and schema validation between frontend and backend.
+## Key Features
 
-The FastAPI backend supports fully asynchronous operations, optimizing database queries, API routes, and test execution for better performance. Deployment is seamless, with both backend and frontend fully deployable to Vercel, enabling quick product releases with minimal configuration.
+-   **Natural Language Queries**: Simply describe a change (e.g., "We deprecated the `as_tool` feature, agents must use `handoff` instead").
+-   **AI-Powered Semantic Search**: Uses OpenAI embeddings to find documentation sections that are *conceptually related* to the query, not just keyword matches.
+-   **Intelligent Suggestions**: An AI agent analyzes the relevant sections and generates precise update suggestions, showing the original text and the proposed change.
+-   **Interactive Review & Approval**: A clean web interface where users can review each suggestion, approve the ones they like, and reject the others.
+-   **Automated Updates**: Approved suggestions are automatically applied to the source documentation files.
+-   **Robust Matching**: A multi-tiered matching system (exact, normalized, and fuzzy) ensures that AI-generated suggestions can be reliably located and replaced in the source files.
 
-### Key features
-✔ End-to-end type safety – Automatically generated typed clients from the OpenAPI schema ensure seamless API contracts between frontend and backend.
+## Tech Stack
 
-✔ Hot-reload updates – The client updates automatically when backend routes change, keeping FastAPI and Next.js in sync.
+-   **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+-   **Backend**: FastAPI, Python, Pydantic
+-   **AI**: OpenAI API (`gpt-4o-mini` for suggestions, `text-embedding-ada-002` for semantic search)
+-   **Storage**: JSON files for managing pending and applied updates.
+-   **Tooling**: Docker & Docker Compose for easy, reproducible setup.
 
-✔ Versatile foundation – Designed for MVPs and production-ready applications, with a pre-configured authentication system and API layer.
+## Architecture Overview
 
-✔ Quick deployment – Deploys a full-stack application—including authentication flow and a dashboard—on Vercel in just a few steps.
+The application consists of a Next.js frontend and a FastAPI backend, orchestrated with Docker Compose.
 
-✔ Production-ready authentication – Includes a pre-configured authentication system and dashboard interface, allowing you to immediately start development with user management features.
+```mermaid
+graph TD
+    subgraph User
+        A[Browser]
+    end
 
-## Technology stack
-This template features a carefully selected set of technologies to ensure efficiency, scalability, and ease of use:
+    subgraph Services
+        B[Next.js Frontend]
+        C[FastAPI Backend]
+    end
 
-- Zod + TypeScript – Type safety and schema validation across the stack.
-- fastapi-users – Complete authentication system with:
-    - Secure password hashing
-    - JWT authentication
-- Email-based password recovery
-- shadcn/ui – Prebuilt React components with Tailwind CSS.
-- OpenAPI-fetch – Fully typed client generation from the OpenAPI schema.
-- UV – Simplified dependency management and packaging.
-- Docker Compose – Consistent environments for development and production.
-- Pre-commit hooks – Automated code linting, formatting, and validation before commits.
-- Vercel Deployment – Serverless backend and scalable frontend, deployable with minimal configuration.
+    subgraph Third-Party
+        D[OpenAI API]
+    end
 
-This is a partial list of the technologies included in the template. For a complete overview, visit our [Technology selection](https://vintasoftware.github.io/nextjs-fastapi-template/technology-selection/) page.
+    subgraph Data
+        E[Documentation Files]
+        F[Update JSONs]
+    end
 
-## Get Started
+    A -- HTTP Request --> B
+    B -- API Call --> C
+    C -- Embeddings & Suggestions --> D
+    C -- Reads/Writes --> E
+    C -- Reads/Writes --> F
+```
 
-To use this template, visit our [Get Started](https://vintasoftware.github.io/nextjs-fastapi-template/get-started/) and follow the steps.
+1.  The user interacts with the **Next.js Frontend**.
+2.  The frontend sends the user's query to the **FastAPI Backend**.
+3.  The backend:
+    a.  Uses the **OpenAI API** to create an embedding of the user's query.
+    b.  Compares this embedding against pre-computed embeddings of the **Documentation Files** to find relevant sections.
+    c.  Sends the relevant sections and the query to the **OpenAI API** to generate update suggestions.
+    d.  Saves these suggestions to **JSON files** for review.
+4.  The user reviews, approves, or rejects suggestions, and approved changes are written back to the documentation files.
 
-## Using the template? Let's talk!
+## Getting Started
 
-We’re always curious to see how the community builds on top of it and where it’s being used. To collaborate:
+### Prerequisites
 
-- Join the conversation on [GitHub Discussions](https://github.com/vintasoftware/nextjs-fastapi-template/discussions)
-- Report bugs or suggest improvements via [issues](https://github.com/vintasoftware/nextjs-fastapi-template/issues)
-- Check the [Contributing](https://vintasoftware.github.io/nextjs-fastapi-template/contributing/) guide to get involved
+-   Git
+-   Docker and Docker Compose
+-   An OpenAI API Key
 
-This project is maintained by [Vinta Software](https://www.vinta.com.br/) and is actively used in production systems we build for clients. Talk to our expert consultants — get a free technical review: contact@vinta.com.br.
+### Installation & Setup
 
-*Disclaimer: This project is not affiliated with Vercel.*
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repo-url>
+    cd <your-repo-directory>
+    ```
+
+2.  **Create an environment file:**
+    -   Copy the example environment file:
+        ```bash
+        cp .env.example .env
+        ```
+    -   Open the new `.env` file and add your OpenAI API key:
+        ```
+        OPENAI_API_KEY="sk-..."
+        ```
+
+3.  **Launch the application with Docker Compose:**
+    ```bash
+    docker-compose up --build
+    ```
+    This command will build the Docker images for the frontend and backend and start both services.
+
+4.  **Access the application:**
+    -   Frontend (Web App): [http://localhost:3000](http://localhost:3000)
+    -   Backend (API Docs): [http://localhost:8000/docs](http://localhost:8000/docs)
+
+## Usage
+
+1.  Open the web application at [http://localhost:3000](http://localhost:3000).
+2.  In the text area, enter a natural language query describing a documentation change.
+3.  Click "Analyze & Generate Suggestions".
+4.  The AI will analyze the documentation and present you with a list of suggested updates.
+5.  Navigate to the "Review & Approve" page to see pending suggestions.
+6.  Review each suggestion and click "Approve" or "Reject".
+7.  Approved changes will be automatically saved to the documentation files located in the `data/documentation` directory.
+
+## Future Improvements
+
+-   **Database Integration**: Replace the JSON file storage with a proper database (e.g., PostgreSQL) for better scalability and management of updates.
+-   **Embedding Caching**: Cache documentation embeddings to reduce latency and API costs on subsequent queries.
+-   **User Authentication**: Add a user login system to track who made which changes.
+-   **CI/CD Pipeline**: Implement a continuous integration and deployment pipeline to automate testing and deployment to a cloud environment.
+-   **Support for More Formats**: Allow direct updates to Markdown (`.md`) files instead of just scraped JSON representations.

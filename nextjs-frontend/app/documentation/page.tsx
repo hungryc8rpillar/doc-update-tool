@@ -153,7 +153,7 @@ export default function DocumentationPage() {
                 </div>
               </div>
               <div className="text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full font-medium">
-                {result.status.replace('_', ' ').toUpperCase()}
+                {(result.status ? result.status.replace('_', ' ').toUpperCase() : 'UNKNOWN')}
               </div>
             </div>
 
@@ -165,7 +165,7 @@ export default function DocumentationPage() {
 
             {/* Suggestions */}
             <div className="space-y-6">
-              {result.suggestions.map((suggestion, index) => (
+              {(result.suggestions || []).map((suggestion, index) => (
                 <div key={index} className="border border-gray-200 rounded-lg p-5 hover:shadow-sm transition-shadow">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="font-semibold text-gray-900 text-lg">
@@ -183,6 +183,22 @@ export default function DocumentationPage() {
                           : 'bg-red-100 text-red-800'
                       }`}>
                         {Math.round(suggestion.confidence_score * 100)}% confidence
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* File Information */}
+                  <div className="mb-4 bg-gray-50 border border-gray-200 rounded-lg p-3">
+                    <div className="flex items-center space-x-4 text-sm">
+                      <div>
+                        <span className="font-medium text-gray-700">Section:</span>
+                        <span className="ml-1 text-gray-900">{suggestion.section_title}</span>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-700">File:</span>
+                        <span className="ml-1 text-gray-900 font-mono text-xs">
+                          {suggestion.file_path.split('/').pop() || suggestion.file_path}
+                        </span>
                       </div>
                     </div>
                   </div>
