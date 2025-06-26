@@ -100,17 +100,16 @@ When a user submits a query describing a documentation change, the following wor
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
-cd <your-repo-directory>
+git clone https://github.com/hungryc8rpillar/doc-update-tool.git
+cd doc-update-tool
 ```
 
 ### 2. Set up environment variables
 
-- Copy the example environment file and fill in your OpenAI API key and other required values:
+- Copy the example environment file and fill in your OpenAI API key:
   ```bash
   cp .env.example .env
   ```
-- Edit `.env` and add your secrets.
 
 ### 3. Install and run the **backend** (FastAPI)
 
