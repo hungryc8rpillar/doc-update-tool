@@ -162,7 +162,7 @@ class AIAnalyzer:
 
     async def _call_openai_api(self, prompt: str) -> str:
         response = self.client.chat.completions.create(
-            model=settings.AI_MODEL,
+            model=settings.AI_DEFAULT_MODEL,
             messages=[
                 {"role": "system", "content": "You are a technical documentation expert. Respond only with valid JSON."},
                 {"role": "user", "content": prompt}
