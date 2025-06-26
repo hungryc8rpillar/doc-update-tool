@@ -147,18 +147,14 @@ npm run dev  # or pnpm dev
 6.  Review each suggestion and click "Approve" or "Reject".
 7.  Approved changes will be automatically saved to the documentation files located in the `data/documentation` directory.
 
-## Future Improvements
+### Current Limitations
 
--   **Multi-user support with authentication:** Add user registration, login, and role-based permissions.
--   **Database integration:** Migrate from file-based storage to a scalable database (e.g., PostgreSQL) for reliability and performance.
--   **Advanced AI features:** Integrate vector databases and more sophisticated retrieval-augmented generation (RAG) for better semantic search and context.
--   **Background processing:** Support large documentation sets and long-running tasks with background jobs.
--   **Comprehensive testing:** Implement unit, integration, and end-to-end tests for both backend and frontend.
--   **Production deployment:** Add scripts and configuration for robust, secure, and scalable deployment.
--   **Embedding caching:** Cache documentation embeddings to reduce latency and API costs on subsequent queries.
--   **Support for more documentation formats:** Enable updates to Markdown and other formats, not just JSON.
--   **User attribution and audit trails:** Track who made which changes for accountability.
--   **CI/CD pipeline:** Automate testing and deployment to cloud environments.
+- Single-user system; no concurrent user support.
+- File-based storage; not suitable for high-volume usage.
+- Simple AI prompting; no advanced RAG techniques.
+- Limited error recovery; basic retry mechanisms only.
+- No user authentication; all changes are anonymous.
+- Synchronous processing; AI calls block the UI.
 
 ---
 
@@ -221,22 +217,15 @@ npm run dev  # or pnpm dev
 
 ---
 
-### Current Limitations
+## Future Improvements
 
-- Single-user system; no concurrent user support.
-- File-based storage; not suitable for high-volume usage.
-- Simple AI prompting; no advanced RAG techniques.
-- Limited error recovery; basic retry mechanisms only.
-- No user authentication; all changes are anonymous.
-- Synchronous processing; AI calls block the UI.
-
----
-
-### Planned Improvements
-
-- Multi-user support with proper authentication.
-- Database migration for scalability and reliability.
-- Advanced AI with vector embeddings and semantic search.
-- Background processing for large documentation sets.
-- Comprehensive testing suite.
-- Production deployment configuration.
+- **Multi-user support with authentication:** Add user registration, login, and role-based permissions.
+- **Database integration:** Migrate from file-based storage to a scalable database (e.g., PostgreSQL) for reliability and performance.
+- **Advanced AI features:** Integrate vector databases and more sophisticated retrieval-augmented generation (RAG) for better semantic search and context.
+- **Background processing:** Support large documentation sets and long-running tasks with background jobs.
+- **Comprehensive testing:** Implement unit, integration, and end-to-end tests for both backend and frontend.
+- **Production deployment:** Add scripts and configuration for robust, secure, and scalable deployment.
+- **Embedding caching:** Cache documentation embeddings to reduce latency and API costs on subsequent queries.
+- **Support for more documentation formats:** Enable updates to Markdown and other formats, not just JSON.
+- **User attribution and audit trails:** Track who made which changes for accountability.
+- **CI/CD pipeline:** Automate testing and deployment to cloud environments.
