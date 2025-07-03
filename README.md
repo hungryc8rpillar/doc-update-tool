@@ -109,6 +109,10 @@ Copy the example environment file and fill in your OpenAI API key:
   ```bash
   cp .env.example .env
   ```
+# On Windows (PowerShell):
+  ```powershell
+  copy .env.example .env
+  ```
 
 **Note:**
 The application expects a folder called `documentation` inside the `data` directory (i.e., `data/documentation/`).
@@ -122,6 +126,8 @@ python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000 --reload
+# Or, using uvicorn directly:
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 - The backend will be available at [http://localhost:8000/docs](http://localhost:8000/docs).
 
@@ -136,12 +142,12 @@ npm run dev  # or pnpm dev
 
 ### 5. Access the application
 
-- **Frontend (Web App):** [http://localhost:3000](http://localhost:3000)
+- **Frontend (Web App):** [http://localhost:3000/documentation](http://localhost:3000/documentation)
 - **Backend (API Docs):** [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ## Usage
 
-1.  Open the web application at [http://localhost:3000](http://localhost:3000).
+1.  Open the web application at [http://localhost:3000/documentation](http://localhost:3000/documentation).
 2.  In the text area, enter a natural language query describing a documentation change.
 3.  Click "Analyze & Generate Suggestions".
 4.  The AI will analyze the documentation and present you with a list of suggested updates.
